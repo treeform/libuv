@@ -35,6 +35,86 @@ else:
     uv_os_sock_t* {.importc.} = posix.SocketHandle
     uv_os_fd_t* {.importc.} = cint
 
+  ####################
+  #     uv_error     #
+  ####################
+  const
+    UV_E2BIG* = E2BIG
+    UV_EACCES* = EACCESS
+    UV_EADDRINUSE* = EADDRINUSE
+    UV_EADDRNOTAVAIL* = EADDRNOTAVAIL
+    UV_EAFNOSUPPORT* = EAFNOSUPPORT
+    UV_EAGAIN* = EAGAIN
+    UV_EAI_ADDRFAMILY* = EAI_ADDRFAMILY
+    UV_EAI_AGAIN* = EAI_AGAIN
+    UV_EAI_BADFLAGS* = EAI_BADFLAGS
+    UV_EAI_BADHINTS* = EAI_BADHINTS
+    UV_EAI_CANCELED* = EAI_CANCELED
+    UV_EAI_FAIL* = EAI_FAIL
+    UV_EAI_FAMILY* = EAI_FAMILY
+    UV_EAI_MEMORY* = EAI_MEMORY
+    UV_EAI_NODATA* = EAI_NODATA
+    UV_EAI_NONAME* = EAI_NONAME
+    UV_EAI_OVERFLOW* = EAI_OVERFLOW
+    UV_EAI_PROTOCOL* = EAI_PROTOCOL
+    UV_EAI_SERVICE* = EAI_SERVICE
+    UV_EAI_SOCKTYPE* = EAI_SOCKTYPE
+    UV_EALREADY* = EALREADY
+    UV_EBADF* = EBADF
+    UV_EBUSY* = EBUSY
+    UV_ECANCELED*  = ECANCELED
+    UV_ECHARSET* = ECHARSET
+    UV_ECONNABORTED* = ECONNABORTED
+    UV_ECONNREFUSED* = ECONNREFUSED
+    UV_ECONNRESET* = ECONNRESET
+    UV_EDESTADDRREQ* = EDESTADDRREQ
+    UV_EEXIST* = EEXIST
+    UV_EFAULT* = EFAULT
+    UV_EFBIG* = EFBIG
+    UV_EHOSTUNREACH* = EHOSTUNREACH
+    UV_EINTR* = EINTR
+    UV_EINVAL* = EINVAL
+    UV_EIO* = EIO
+    UV_EISCONN* = EISCONN
+    UV_EISDIR* = EISDIR
+    UV_ELOOP* = ELOOP
+    UV_EMFILE* = EMFILE
+    UV_EMSGSIZE* = EMSGSIZE
+    UV_ENAMETOOLONG* = ENAMETOOLONG
+    UV_ENETDOWN* = ENETDOWN
+    UV_ENETUNREACH* = ENETUNREACH
+    UV_ENFILE* = ENFILE
+    UV_ENOBUFS* = ENOBUFS
+    UV_ENODEV* = ENODEV
+    UV_ENOENT* = ENONET
+    UV_ENOMEM* = ENOMEM
+    UV_ENONET* = ENONET
+    UV_ENOPROTOOPT* = ENOPROTOOPT
+    UV_ENOSPC* = ENOSPC
+    UV_ENOSYS* = ENOSYS
+    UV_ENOTCONN* = ENOTCONN
+    UV_ENOTDIR* = ENOTDIR
+    UV_ENOTEMPTY* = ENOTEMPTY
+    UV_ENOTSOCK* = ENOTSOCK
+    UV_ENOTSUP* = ENOTSUP
+    UV_EPERM* = EPERM
+    UV_EPIPE* = EPIPE
+    UV_EPROTO* = EPROTO
+    UV_EPROTONOSUPPORT* = EPROTONOSUPPORT
+    UV_EPROTOTYPE* = EPROTOTYPE
+    UV_ERANGE* = ERANGE
+    UV_EROFS* = EROFS
+    UV_ESHUTDOWN* = ESHUTDOWN
+    UV_ESPIPE* = ESPIPE
+    UV_ESRCH* = ESRCH
+    UV_ETIMEDOUT* = ETIMEDOUT
+    UV_ETXTBSY* = ETXTBSY
+    UV_EXDEV* = EXDEV
+    UV_UNKNOWN* = UNKNOWN
+    UV_EOF* = EOF
+    UV_ENXIO* = ENXIO
+    UV_EMLINK* = EMLINK
+
 #
 # TYPE STATE
 #
@@ -484,6 +564,35 @@ type
   uv_lib_t* {.pure, final, importc, header: "uv.h".} = object
     data*{.importc.}: pointer
 
+  #####################
+  #     uv_thread     #
+  #####################
+  uv_thread_t* {.pure, final, importc, header: "uv.h".} = object
+    data*{.importc.}: pointer
+
+  uv_thread_cb* = proc(arg: pointer): void {.cdecl.}
+
+  uv_key_t* {.pure, final, importc, header: "uv.h".} = object
+    data*{.importc.}: pointer
+
+  uv_once_t* {.pure, final, importc, header: "uv.h".} = object
+    data*{.importc.}: pointer
+
+  uv_mutex_t* {.pure, final, importc, header: "uv.h".} = object
+    data*{.importc.}: pointer
+
+  uv_rwlock_t* {.pure, final, importc, header: "uv.h".} = object
+    data*{.importc.}: pointer
+
+  uv_sem_t* {.pure, final, importc, header: "uv.h".} = object
+    data*{.importc.}: pointer
+
+  uv_cond_t* {.pure, final, importc, header: "uv.h".} = object
+    data*{.importc.}: pointer
+
+  uv_barrier_t* {.pure, final, importc, header: "uv.h".} = object
+    data*{.importc.}: pointer
+
   ###################
   #     uv_misc     #
   ###################
@@ -556,6 +665,17 @@ type
 #
 # PROC STATE
 #
+####################
+#     uv_error     #
+####################
+proc uv_strerror*(err: cint): cstring
+  {.importc,cdecl, dynlib: libuv.}
+
+proc uv_err_name*(err: cint): cstring
+  {.importc,cdecl, dynlib: libuv.}
+
+proc uv_translate_sys_error*(sys_errno: cint): cint
+  {.importc,cdecl, dynlib: libuv.}
 
 ###################
 #     uv_loop     #
@@ -1071,6 +1191,120 @@ proc uv_dlsym*(lib: ptr uv_lib_t, name: cstring, `ptr`: ptr pointer): cint
   {.importc, cdecl, dynlib: libuv.}
 
 proc uv_dlerror*(lib: ptr uv_lib_t): cstring
+  {.importc, cdecl, dynlib: libuv.}
+
+#####################
+#     uv_thread     #
+#####################
+proc uv_thread_create*(tid: ptr uv_thread_t, entry: uv_thread_cb, arg: pointer): cint
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_thread_self*(): uv_thread_t
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_thread_join*(tid: ptr uv_thread_t): cint
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_thread_equal*(t1: ptr uv_thread_t, t2: ptr uv_thread_t): cint
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_key_create*(key: ptr uv_key_t): cint
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_key_delete*(key: ptr uv_key_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_key_get*(key: ptr uv_key_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_key_set*(key: ptr uv_key_t, value: pointer): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_once*(guard: ptr uv_once_t, callback: proc() {.cdecl.}): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_mutex_init*(handle: ptr uv_mutex_t): cint
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_mutex_init_recursive*(handle: ptr uv_mutex_t): cint
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_mutex_destroy*(handle: ptr uv_mutex_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_mutex_lock*(handle: ptr uv_mutex_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_mutex_trylock*(handle: ptr uv_mutex_t): cint
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_mutex_unlock*(handle: ptr uv_mutex_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_rwlock_init*(rwlock: ptr uv_rwlock_t): cint
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_rwlock_destroy*(rwlock: ptr uv_rwlock_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_rwlock_rdlock*(rwlock: ptr uv_rwlock_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_rwlock_tryrdlock*(rwlock: ptr uv_rwlock_t): cint
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_rwlock_rdunlock*(rwlock: ptr uv_rwlock_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_rwlock_wrlock*(rwlock: ptr uv_rwlock_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_rwlock_trywrlock*(rwlock: ptr uv_rwlock_t): cint
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_rwlock_wrunlock*(rwlock: ptr uv_rwlock_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_sem_init*(sem: ptr uv_sem_t, value: cuint): cint
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_sem_destroy*(sem: ptr uv_sem_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_sem_post*(sem: ptr uv_sem_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_sem_wait*(sem: ptr uv_sem_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_sem_trywait*(sem: ptr uv_sem_t): cint
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_cond_init*(cond: ptr uv_cond_t): cint
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_cond_destroy*(cond: ptr uv_cond_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_cond_signal*(cond: ptr uv_cond_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_cond_broadcast*(cond: ptr uv_cond_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_cond_wait*(cond: ptr uv_cond_t, mutex: ptr uv_mutex_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_cond_timedwait*(cond: ptr uv_cond_t, mutex: ptr uv_mutex_t, timeout: uint64): cint
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_barrier_init*(barrier: ptr uv_barrier_t, count: cuint): cint
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_barrier_destroy*(barrier: ptr uv_barrier_t): void
+  {.importc, cdecl, dynlib: libuv.}
+
+proc uv_barrier_wait*(barrier: ptr uv_barrier_t): cint
   {.importc, cdecl, dynlib: libuv.}
 
 ###################
