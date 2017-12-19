@@ -13,7 +13,7 @@ when defined(windows):
 
     uv_buf_t* = object
       base* {.importc.}: pointer
-      len* {.importc.}: ULONG
+      len* {.importc.}: csize
 
     uv_os_sock_t* {.importc.} = winlean.SocketHandle
     uv_os_fd_t* {.importc.} = winlean.Handle
@@ -346,7 +346,7 @@ type
     handle* {.importc.}: ptr uv_stream_t
     send_handle* {.importc.}: ptr uv_stream_t
 
-  uv_read_cb* = proc(stream: ptr uv_stream_t, nread: cssize, buf: uv_buf_t) {.cdecl.}
+  uv_read_cb* = proc(stream: ptr uv_stream_t, nread: cssize, buf: ptr uv_buf_t) {.cdecl.}
 
   uv_write_cb* = proc(req: ptr uv_write_t, status: cint) {.cdecl.}
 
@@ -884,7 +884,7 @@ proc uv_shutdown*(req: ptr uv_shutdown_t, handle: ptr uv_stream_t, cb: uv_shutdo
 proc uv_listen*(stream: ptr uv_stream_t, backlog: cint, cb: uv_connection_cb): cint
   {.importc, cdecl, dynlib: libuv.}
 
-proc uv_accept*(server: ptr uv_stream_t, client: uv_stream_t): cint
+proc uv_accept*(server: ptr uv_stream_t, client: ptr uv_stream_t): cint
   {.importc, cdecl, dynlib: libuv.}
 
 proc uv_read_start*(stream: ptr uv_stream_t, alloc_cb: uv_alloc_cb, read_cb: uv_read_cb): cint
@@ -1358,10 +1358,10 @@ proc uv_free_interface_addresses*(adresses: ptr uv_interface_address_t, count: p
 proc uv_loadavg*(arg: array[3, cdouble]): void
   {.importc, cdecl, dynlib: libuv.}
 
-proc uv_ip4_addr*(ip: cstring, port: cint, `addr`: var SockAddrIn): cint
+proc uv_ip4_addr*(ip: cstring, port: cint, `addr`: ptr SockAddrIn): cint
   {.importc, cdecl, dynlib: libuv.}
 
-proc uv_ip6_addr*(ip: cstring, port: cint, `addr`: var SockAddrIn6): cint
+proc uv_ip6_addr*(ip: cstring, port: cint, `addr`: ptr SockAddrIn6): cint
   {.importc, cdecl, dynlib: libuv.}
 
 proc uv_ip4_name*(src: ptr SockAddrIn, dst: cstring, size: csize): cint
