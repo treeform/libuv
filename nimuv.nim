@@ -35,86 +35,6 @@ else:
     uv_os_sock_t* {.importc.} = posix.SocketHandle
     uv_os_fd_t* {.importc.} = cint
 
-  ####################
-  #     uv_error     #
-  ####################
-  const
-    UV_E2BIG* = E2BIG
-    UV_EACCES* = EACCESS
-    UV_EADDRINUSE* = EADDRINUSE
-    UV_EADDRNOTAVAIL* = EADDRNOTAVAIL
-    UV_EAFNOSUPPORT* = EAFNOSUPPORT
-    UV_EAGAIN* = EAGAIN
-    UV_EAI_ADDRFAMILY* = EAI_ADDRFAMILY
-    UV_EAI_AGAIN* = EAI_AGAIN
-    UV_EAI_BADFLAGS* = EAI_BADFLAGS
-    UV_EAI_BADHINTS* = EAI_BADHINTS
-    UV_EAI_CANCELED* = EAI_CANCELED
-    UV_EAI_FAIL* = EAI_FAIL
-    UV_EAI_FAMILY* = EAI_FAMILY
-    UV_EAI_MEMORY* = EAI_MEMORY
-    UV_EAI_NODATA* = EAI_NODATA
-    UV_EAI_NONAME* = EAI_NONAME
-    UV_EAI_OVERFLOW* = EAI_OVERFLOW
-    UV_EAI_PROTOCOL* = EAI_PROTOCOL
-    UV_EAI_SERVICE* = EAI_SERVICE
-    UV_EAI_SOCKTYPE* = EAI_SOCKTYPE
-    UV_EALREADY* = EALREADY
-    UV_EBADF* = EBADF
-    UV_EBUSY* = EBUSY
-    UV_ECANCELED*  = ECANCELED
-    UV_ECHARSET* = ECHARSET
-    UV_ECONNABORTED* = ECONNABORTED
-    UV_ECONNREFUSED* = ECONNREFUSED
-    UV_ECONNRESET* = ECONNRESET
-    UV_EDESTADDRREQ* = EDESTADDRREQ
-    UV_EEXIST* = EEXIST
-    UV_EFAULT* = EFAULT
-    UV_EFBIG* = EFBIG
-    UV_EHOSTUNREACH* = EHOSTUNREACH
-    UV_EINTR* = EINTR
-    UV_EINVAL* = EINVAL
-    UV_EIO* = EIO
-    UV_EISCONN* = EISCONN
-    UV_EISDIR* = EISDIR
-    UV_ELOOP* = ELOOP
-    UV_EMFILE* = EMFILE
-    UV_EMSGSIZE* = EMSGSIZE
-    UV_ENAMETOOLONG* = ENAMETOOLONG
-    UV_ENETDOWN* = ENETDOWN
-    UV_ENETUNREACH* = ENETUNREACH
-    UV_ENFILE* = ENFILE
-    UV_ENOBUFS* = ENOBUFS
-    UV_ENODEV* = ENODEV
-    UV_ENOENT* = ENONET
-    UV_ENOMEM* = ENOMEM
-    UV_ENONET* = ENONET
-    UV_ENOPROTOOPT* = ENOPROTOOPT
-    UV_ENOSPC* = ENOSPC
-    UV_ENOSYS* = ENOSYS
-    UV_ENOTCONN* = ENOTCONN
-    UV_ENOTDIR* = ENOTDIR
-    UV_ENOTEMPTY* = ENOTEMPTY
-    UV_ENOTSOCK* = ENOTSOCK
-    UV_ENOTSUP* = ENOTSUP
-    UV_EPERM* = EPERM
-    UV_EPIPE* = EPIPE
-    UV_EPROTO* = EPROTO
-    UV_EPROTONOSUPPORT* = EPROTONOSUPPORT
-    UV_EPROTOTYPE* = EPROTOTYPE
-    UV_ERANGE* = ERANGE
-    UV_EROFS* = EROFS
-    UV_ESHUTDOWN* = ESHUTDOWN
-    UV_ESPIPE* = ESPIPE
-    UV_ESRCH* = ESRCH
-    UV_ETIMEDOUT* = ETIMEDOUT
-    UV_ETXTBSY* = ETXTBSY
-    UV_EXDEV* = EXDEV
-    UV_UNKNOWN* = UNKNOWN
-    UV_EOF* = EOF
-    UV_ENXIO* = ENXIO
-    UV_EMLINK* = EMLINK
-
 #
 # TYPE STATE
 #
@@ -182,7 +102,7 @@ type
     data* {.importc.}: pointer
     `type`* {.importc.} : uv_req_type
 
-  uv_req_type = enum
+  uv_req_type* = enum
     UV_UNKNOWN_REQ = 0,
     UV_REQ,
     UV_CONNECT,
@@ -752,8 +672,8 @@ proc uv_send_buffer_size*(handle: ptr uv_handle_t, value: cint): cint
 proc uv_recv_buffer_size*(handle: ptr uv_handle_t, value: cint): cint
   {.importc, cdecl, dynlib: libuv.}
 
-#proc uv_uv_fileno*(handle: ptr uv_handle_t, fd: uv_os_fd_t): cint
-#  {.importc, cdecl, dynlib: libuv.}
+proc uv_fileno*(handle: ptr uv_handle_t, fd: ptr uv_os_fd_t): cint
+  {.importc, cdecl, dynlib: libuv.}
 
 ##################
 #     uv_req     #
