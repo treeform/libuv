@@ -1,10 +1,4 @@
-# nimuv
-> nimuv is libuv dynamic binding for nim.
-### doc
-see official libuv api document [libuv](http://docs.libuv.org/en/v1.x/api.html)
-### require
-- libuv (test 1.19)
-- nim (test 0.17.2 and devel)
-### usage
-see uvtest.nim
-warning: change your install libuv path in nimuv.nim. (default is /usr/local/libuv.so)
+# libuv - wrapper for nim
+
+originally based on:
+https://github.com/2vg/nimuv
