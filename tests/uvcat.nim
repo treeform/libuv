@@ -1,13 +1,6 @@
 import ../src/libuv, os
 
 
-const
-  O_RDONLY = 0x0000
-  O_WRONLY = 0x0001
-  O_RDWR = 0x0002
-  O_ACCMODE = 0x0003
-
-
 proc on_read(req: ptr uv_fs_t) {.cdecl.}
 
 
@@ -35,7 +28,7 @@ proc on_read(req: ptr uv_fs_t) =
     # synchronous
     discard uv_fs_close(uv_default_loop(), addr close_req, cast[uv_file](open_req.result), nil)
   elif req.result > 0:
-    iov.len = req.result
+    iov.len = int32 req.result
     discard uv_fs_write(uv_default_loop(), addr write_req, 1, addr iov, 1, -1, on_write)
 
 
